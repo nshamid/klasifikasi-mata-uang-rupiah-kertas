@@ -45,7 +45,7 @@ CATEGORIES = ['1000', '2000', '5000', '10000', '20000', '50000', '100000']
 @st.cache_resource
 def load_model():
     try:
-        with open('jst_rupiah_model.pkl', 'rb') as f:
+        with open('backprop_rupiah_model.pkl', 'rb') as f:
             model = pickle.load(f)
         return model
     except FileNotFoundError:

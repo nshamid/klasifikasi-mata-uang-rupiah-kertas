@@ -91,7 +91,7 @@ if page == "Beranda":
 # HALAMAN 2: UJI KLASIFIKASI
 # ==========================================
 elif page == "Uji Klasifikasi":
-    st.title("📸 Ruang Uji JST")
+    st.title("📸 Ruang Uji")
     
     if model is None:
         st.error("File 'backprop_rupiah_model.pkl' tidak ditemukan. Pastikan file ada di direktori yang sama.")
@@ -157,4 +157,4 @@ elif page == "Metodologi":
     
     # Tips: Kamu bisa mengunggah gambar Confusion Matrix ke GitHub kamu 
     # lalu menampilkan link gambarnya di sini menggunakan st.image()
-    st.warning("Tambahkan gambar Confusion Matrix dan Kurva Loss di sini agar laporan lebih lengkap.")
+    st.warning("Gambar Confusion Matrix")

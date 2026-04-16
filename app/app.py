@@ -71,7 +71,7 @@ if page == "Beranda":
     with col1:
         st.subheader("Deskripsi Proyek")
         st.write("""
-        Aplikasi ini merupakan implementasi Jaringan Syaraf Tiruan (JST) Backpropagation 
+        Aplikasi ini merupakan implementasi Jaringan Syaraf Tiruan (ANN) Backpropagation 
         yang dibangun secara manual menggunakan library NumPy. Sistem ini dirancang untuk 
         mengenali nominal uang kertas Rupiah berdasarkan ekstraksi ciri warna (HSV Histogram).
         """)
@@ -141,7 +141,7 @@ elif page == "Uji Klasifikasi":
 # ==========================================
 elif page == "Metodologi":
     st.title("🧠 Di Balik Layar")
-    st.write("Bagian ini menjelaskan detail teknis dari arsitektur JST yang dibangun.")
+    st.write("Bagian ini menjelaskan detail teknis dari arsitektur ANN yang dibangun.")
     
     st.subheader("Arsitektur Jaringan")
     st.code("""

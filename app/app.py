@@ -64,14 +64,14 @@ page = st.sidebar.radio("Pilih Halaman:", ["Beranda", "Uji Klasifikasi", "Metodo
 # HALAMAN 1: BERANDA
 # ==========================================
 if page == "Beranda":
-    st.title("💰 Klasifikasi Uang Rupiah Berbasis ANN")
+    st.title("💰 Klasifikasi Uang Rupiah Kertas")
     st.write("---")
     
     col1, col2 = st.columns([2, 1])
     with col1:
         st.subheader("Deskripsi Proyek")
         st.write("""
-        Aplikasi ini merupakan implementasi Jaringan Syaraf Tiruan (ANN) Backpropagation 
+        Aplikasi ini merupakan implementasi Jaringan Syaraf Tiruan Backpropagation 
         yang dibangun secara manual menggunakan library NumPy. Sistem ini dirancang untuk 
         mengenali nominal uang kertas Rupiah berdasarkan ekstraksi ciri warna (HSV Histogram).
         """)

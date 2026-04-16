@@ -100,7 +100,7 @@ elif page == "Uji Klasifikasi":
         
         img_file = None
         with tab1:
-            img_camera = st.camera_input("Jepret Uang Rupiah")
+            img_camera = st.camera_input("Jepret Uang Rupiah Kertas")
             if img_camera: img_file = img_camera
         with tab2:
             img_upload = st.file_uploader("Pilih file gambar...", type=["jpg", "png", "jpeg"])

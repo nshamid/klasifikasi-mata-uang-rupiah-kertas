@@ -86,6 +86,8 @@ if page == "Beranda":
     st.write("- **NIM:** 09021382328147")
     st.write("- **Dosen Pengampu:** Assoc, Prof. Julian Supardi, S.Pd., M.T., Ph.D.")
     st.write("- **Mata Kuliah:** Jaringan Syaraf Tiruan")
+    st.write("- **Source Code:** [Lihat di GitHub](https://github.com/nshamid/klasifikasi-mata-uang-rupiah-kertas/)")
+    st.write("- **Notebook:** [Lihat di Kaggle](https://www.kaggle.com/code/nshamid/klasifikasi-mata-uang-rupiah)")
 
 # ==========================================
 # HALAMAN 2: UJI KLASIFIKASI

@@ -155,5 +155,5 @@ elif page == "Metodologi":
     st.subheader("Evaluasi Performa")
     st.write("Berdasarkan pengujian pada dataset 'Rupiah Banknotes', model mencapai akurasi 92% pada data uji.")
     
-    st.warning("Gambar Confusion Matrix")
+    st.warning("Confusion Matrix")
     st.image("confussion_matrix_backprop.png")

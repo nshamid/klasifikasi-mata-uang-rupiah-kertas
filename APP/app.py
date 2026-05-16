@@ -2,9 +2,7 @@ import streamlit as st
 import numpy as np
 import cv2
 from PIL import Image
-import tensorflow as tf
-from tensorflow.keras.applications import MobileNetV2
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+import tflite_runtime.interpreter as tflite
 
 # ==========================================
 # KONFIGURASI HALAMAN
@@ -22,50 +20,42 @@ st.set_page_config(
 
 CATEGORIES = ['1000', '2000', '5000', '10000', '20000', '50000', '100000']
 IMG_SIZE   = (224, 224)
-MODEL_DIR  = "rupiah_classifier_mobilenet.keras"   # folder .keras
+MODEL_PATH = "rupiah_classifier.tflite"
 
 # ==========================================
-# LOAD MODEL (cached agar tidak reload tiap interaksi)
+# LOAD MODEL
 # ==========================================
 
 @st.cache_resource
-def load_models():
-    # Feature extractor MobileNetV2 (frozen, pretrained ImageNet)
-    mobilenet = MobileNetV2(
-        input_shape=(224, 224, 3),
-        include_top=False,
-        pooling="avg",
-        weights="imagenet",
-    )
-    mobilenet.trainable = False
-
-    # Classifier (Dense) yang sudah dilatih
-    classifier = tf.keras.models.load_model(MODEL_DIR)
-
-    return mobilenet, classifier
-
+def load_model():
+    interpreter = tflite.Interpreter(model_path=MODEL_PATH)
+    interpreter.allocate_tensors()
+    return interpreter
 
 # ==========================================
-# FUNGSI EKSTRAKSI CIRI & PREDIKSI
+# FUNGSI PREDIKSI
 # ==========================================
 
 def preprocess_image(image: Image.Image) -> np.ndarray:
-    """Konversi PIL Image → array siap MobileNetV2."""
+    """Konversi PIL Image → array siap TFLite (224x224, [-1, 1])."""
     img_rgb     = image.convert("RGB")
     img_resized = img_rgb.resize(IMG_SIZE)
     img_array   = np.array(img_resized, dtype="float32")
-    img_array   = np.expand_dims(img_array, axis=0)          # (1, 224, 224, 3)
-    return preprocess_input(img_array)                        # normalisasi ke [-1, 1]
+    img_array   = (img_array / 127.5) - 1.0          # normalisasi ke [-1, 1]
+    return np.expand_dims(img_array, axis=0)          # (1, 224, 224, 3)
 
+def classify(image: Image.Image, interpreter):
+    """Jalankan inferensi TFLite."""
+    input_details  = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
 
-def classify(image: Image.Image, mobilenet, classifier):
-    """Jalankan pipeline: ekstraksi ciri MobileNetV2 → prediksi classifier."""
-    img_preprocessed = preprocess_image(image)
-    features         = mobilenet.predict(img_preprocessed, verbose=0)  # (1, 1280)
-    probs            = classifier.predict(features, verbose=0)[0]       # (7,)
-    idx              = int(np.argmax(probs))
+    img_array = preprocess_image(image)
+    interpreter.set_tensor(input_details[0]['index'], img_array)
+    interpreter.invoke()
+
+    probs = interpreter.get_tensor(output_details[0]['index'])[0]  # (7,)
+    idx   = int(np.argmax(probs))
     return CATEGORIES[idx], float(probs[idx]) * 100, probs
-
 
 # ==========================================
 # UI UTAMA
@@ -81,10 +71,10 @@ st.markdown(
 )
 st.divider()
 
-# --- Load model dengan spinner ---
+# --- Load model ---
 with st.spinner("Memuat model..."):
     try:
-        mobilenet, classifier = load_models()
+        interpreter = load_model()
         model_ready = True
     except Exception as e:
         st.error(f"Gagal memuat model: {e}")
@@ -98,7 +88,7 @@ if model_ready:
         image = Image.open(img_input)
 
         with st.spinner("Menganalisis gambar..."):
-            label, confidence, probs = classify(image, mobilenet, classifier)
+            label, confidence, probs = classify(image, interpreter)
 
         st.divider()
 
@@ -112,7 +102,6 @@ if model_ready:
             st.metric(label="Prediksi Nominal", value=f"Rp {label}")
             st.metric(label="Tingkat Keyakinan", value=f"{confidence:.1f}%")
 
-            # Progress bar keyakinan
             color = "green" if confidence >= 75 else "orange" if confidence >= 50 else "red"
             st.markdown(
                 f"""
@@ -128,7 +117,7 @@ if model_ready:
         st.divider()
         st.markdown("**Distribusi Probabilitas Semua Kelas**")
 
-        prob_data = {f"Rp {cat}": float(p) * 100 for cat, p in zip(CATEGORIES, probs)}
+        prob_data   = {f"Rp {cat}": float(p) * 100 for cat, p in zip(CATEGORIES, probs)}
         sorted_data = dict(sorted(prob_data.items(), key=lambda x: x[1], reverse=True))
 
         for cat_label, prob_val in sorted_data.items():

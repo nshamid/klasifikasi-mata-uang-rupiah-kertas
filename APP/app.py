@@ -2,7 +2,11 @@ import streamlit as st
 import numpy as np
 import cv2
 from PIL import Image
-import tflite_runtime.interpreter as tflite
+try:
+    from ai_edge_litert.interpreter import Interpreter as TFLiteInterpreter
+except ImportError:
+    import tflite_runtime.interpreter as tflite
+    TFLiteInterpreter = tflite.Interpreter
 
 # ==========================================
 # KONFIGURASI HALAMAN
@@ -28,7 +32,7 @@ MODEL_PATH = "rupiah_classifier.tflite"
 
 @st.cache_resource
 def load_model():
-    interpreter = tflite.Interpreter(model_path=MODEL_PATH)
+    interpreter = TFLiteInterpreter(model_path=MODEL_PATH)
     interpreter.allocate_tensors()
     return interpreter
 

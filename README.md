@@ -7,7 +7,7 @@
 Proyek ini dikembangkan sebagai tugas **Ujian Tengah Semester (UTS)** mata kuliah Jaringan Syaraf Tiruan. Fokus utama proyek ini adalah membangun model klasifikasi uang kertas Rupiah (7 nominal) menggunakan arsitektur **ANN Backpropagation** yang diimplementasikan secara manual menggunakan library **NumPy**.
 
 ## App Online (Streamlit) - Uji Coba Input Kamera
-(https://klasifikasi-mata-uang-rupiah-kertas.streamlit.app/)
+https://klasifikasi-mata-uang-rupiah-kertas.streamlit.app
 
 ## 🚀 Fitur Utama
 - **Manual JST Implementation**: Algoritma Backpropagation, fungsi aktivasi ReLU & Softmax, serta perhitungan Cross-Entropy dirancang dari nol tanpa library machine learning (seperti Scikit-Learn atau TensorFlow).
